@@ -1,7 +1,7 @@
 # queue-mgmt
 basic library to handle queue
 
-##A. Queue Data Model Request
+## A. Queue Data Model Request
 1. ID (it will be the technical identifier (primary key) for the object in the queue)
 2. Business ID: It is GUID for reference in the support operations.
 3. Operation: Optional. it marks the queue operation
@@ -21,7 +21,7 @@ basic library to handle queue
 11. Next Retry On
 12. Queue ID: integer. It is used to allow to run multiple processing tools on the same queue storage but every tool will run on a unique Queue ID objects. (Parallel handling to speed up queue processing). When adding objects in the queue, it should be added in round robin.
 
-##B. Queue Data Model Settings
+## B. Queue Data Model Settings
 1. ID
 2. Operation
 3. Max Retrial Count
