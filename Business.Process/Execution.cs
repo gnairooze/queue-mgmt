@@ -14,18 +14,31 @@ namespace QueueMgmt.Business.Process
         #endregion
 
         #region constructors
-        public Execution()
+        public Execution(ILogger.ILog logger)
         {
+            this.Logger = logger;
+
             loadExecutionWorkers();
         }
+        #endregion
+
+        #region properties
+        public ILogger.ILog Logger { private get; set; }
+        #endregion
 
         public bool Execute(Business.View.Request.ListView request)
         {
+            logInfo(string.Format("start Execute of request with ID {0}", request.ID));
+
             var worker = (from workerItem in this._ExecutionWorkers
                           where workerItem.BusinessID == request.Worker_BusinessID
                           select workerItem).Single();
 
-            return worker.Execute(request);
+            bool succeeded = worker.Execute(request);
+
+            logInfo(string.Format("end Execute of request with ID {0} with status {1}", request.ID, succeeded?"succeeded":"failed"));
+
+            return succeeded;
         }
 
         /// <summary>
@@ -33,8 +46,16 @@ namespace QueueMgmt.Business.Process
         /// </summary>
         protected void loadExecutionWorkers()
         {
+            logInfo("start loadExecutionWorkers");
+
             this._ExecutionWorkers.Add(new ExecutionWorker());
+
+            logInfo("end loadExecutionWorkers");
         }
-        #endregion
+
+        private void logInfo(string what)
+        {
+            this.Logger.Log(ILogger.Priority.Info, this.GetType().ToString(), what, DateTime.Now);
+        }
     }
 }
