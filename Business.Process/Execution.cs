@@ -48,7 +48,7 @@ namespace QueueMgmt.Business.Process
         {
             logInfo("start loadExecutionWorkers");
 
-            this._ExecutionWorkers.Add(new ExecutionWorker());
+            this._ExecutionWorkers.Add(new TestExecutionWorker());
 
             logInfo("end loadExecutionWorkers");
         }

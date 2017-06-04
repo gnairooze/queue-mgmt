@@ -12,7 +12,7 @@ namespace QueueMgmt.Business.Process
     {
         #region attributes
         protected List<Business.View.OperationSettings.ListView> _OperationsSettings;
-        protected IQueryable<Data.Model.Request> _DataModelRequests;
+        protected List<Data.Model.Request> _DataModelRequests;
 
         static Data.Model.QueueDbContext db = new Data.Model.QueueDbContext();
         static Execution exec = null;
@@ -27,6 +27,7 @@ namespace QueueMgmt.Business.Process
             loadOperationsSettings();
 
             this.QueueID = queueID;
+            this.TopCount = topCount;
         }
         #endregion
 
@@ -142,9 +143,9 @@ namespace QueueMgmt.Business.Process
                             )
                          )
                         orderby dataModel.ID
-                        select dataModel).Take(this.TopCount);
+                        select dataModel).Take(this.TopCount).ToList();
 
-            logInfo("set the read requests DB query to _DataModelRequests");
+            logInfo("load requests from DB to _DataModelRequests");
 
             logInfo("end loadRequests");
         }

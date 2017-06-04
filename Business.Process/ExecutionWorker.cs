@@ -21,7 +21,7 @@ namespace QueueMgmt.Business.Process
         public string Name { get; set; }
         #endregion
 
-        public bool Execute(Business.View.Request.ListView request)
+        public virtual bool Execute(Business.View.Request.ListView request)
         {
             return true;
         }

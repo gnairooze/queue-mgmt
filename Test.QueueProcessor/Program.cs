@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QueueMgmt.Present.QueueProcessor
+namespace QueueMgmt.Test.QueueProcessor
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Business.Process.Queue queue = new Business.Process.Queue(QueueProcessor.Properties.Settings.Default.QueueID, QueueProcessor.Properties.Settings.Default.TopCount, new ConsoleLogger.SimpleLogger());
+            //TestData.Fill();
 
-            queue.Run();
+            //TestData.ResetRequests();
 
             Console.WriteLine("Press any key to exit ...");
             Console.Read();
