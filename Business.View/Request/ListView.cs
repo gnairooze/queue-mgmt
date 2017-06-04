@@ -31,6 +31,8 @@ namespace QueueMgmt.Business.View.Request
             this.ReferenceName = request.ReferenceName;
             this.ReferenceValue = request.ReferenceValue;
             this.RemainingRetrials = request.RemainingRetrials;
+            this.Worker_ID = request.Worker_ID;
+            this.Worker_BusinessID = request.Worker_BusinessID;
             this._Status = request.Status;
         }
         #endregion
@@ -42,6 +44,8 @@ namespace QueueMgmt.Business.View.Request
         public string ReferenceName { get; set; }
         public string ReferenceValue { get; set; }
         public string Data { get; set; }
+        public long Worker_ID { get; set; }
+        public Guid Worker_BusinessID { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime ModifiedOn { get; set; }
         public BusinessVault.RequestStatus Status
@@ -59,6 +63,27 @@ namespace QueueMgmt.Business.View.Request
         public DateTime? NextRetryOn { get; set; }
         public int QueueID { get; set; }
         #endregion
+
+        public void CopyDataTo(Data.Model.Request request)
+        {
+            request.NextRetryOn = this.NextRetryOn;
+            request.RemainingRetrials = this.RemainingRetrials;
+            request.Status = this._Status;
+        }
+        public void CopyTo(Data.Model.Request request)
+        {
+            request.BusinessID = this.BusinessID;
+            request.Data = this.Data;
+            request.NextRetryOn = this.NextRetryOn;
+            request.Operation = this.Operation;
+            request.QueueID = this.QueueID;
+            request.ReferenceName = this.ReferenceName;
+            request.ReferenceValue = this.ReferenceValue;
+            request.RemainingRetrials = this.RemainingRetrials;
+            request.Status = this._Status;
+            request.Worker_BusinessID = this.Worker_BusinessID;
+            request.Worker_ID = this.Worker_ID;
+        }
     }
 
 }

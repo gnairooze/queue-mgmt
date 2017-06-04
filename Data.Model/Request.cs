@@ -26,6 +26,11 @@ namespace QueueMgmt.Data.Model
         [Required]
         public string Data { get; set; }
         [Required]
+        [Index]
+        public long Worker_ID { get; set; }
+        [Required]
+        public Guid Worker_BusinessID { get; set; }
+        [Required]
         public byte Status { get; set; }
         [Required]
         public int RemainingRetrials { get; set; }
