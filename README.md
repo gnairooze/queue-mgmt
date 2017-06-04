@@ -8,18 +8,20 @@ basic library to handle queue
 4. Reference Name
 5. Reference Value
 6. Data: xml or json
-7. Created On : datetime. When the object in the queue created.
-8. Modified On: datetime, When the object in the queue recently modified.
-9. Status: lookup to identify at least the following statuses:
+7. Worker ID: long. It determines which worker will process the data of the request. It is only one worker per request. For multiple workers, repeat the request. This design to simplify the queue and prevent master, detail complexity in the support operation afterwards.
+8. Worker Business ID: GUID
+9. Created On : datetime. When the object in the queue created.
+10. Modified On: datetime, When the object in the queue recently modified.
+11. Status: lookup to identify at least the following statuses:
 	9.a. Not Process
 	9.b. Successfully Processed
 	9.c. Skipped from Processing
 	9.d. On Retry for Processing. It is optional, if the queue has the feature of retrying processing.
 	9.e. Failed Processing
 	9.f. Aborted processing
-10. Remaining Retrial Counter: integer. It is optional, if the queue has the feature of retrying processing. It will start with the MAX retrial count. Then it will decrease by every retiral till it reaches zero, it will be marked as failed.
-11. Next Retry On
-12. Queue ID: integer. It is used to allow to run multiple processing tools on the same queue storage but every tool will run on a unique Queue ID objects. (Parallel handling to speed up queue processing). When adding objects in the queue, it should be added in round robin.
+12. Remaining Retrial Counter: integer. It is optional, if the queue has the feature of retrying processing. It will start with the MAX retrial count. Then it will decrease by every retiral till it reaches zero, it will be marked as failed.
+13. Next Retry On
+14. Queue ID: integer. It is used to allow to run multiple processing tools on the same queue storage but every tool will run on a unique Queue ID objects. (Parallel handling to speed up queue processing). When adding objects in the queue, it should be added in round robin.
 
 ## B. Queue Data Model Settings
 1. ID
