@@ -10,7 +10,7 @@ namespace QueueMgmt.Business.Process
     internal class Execution
     {
         #region attributes
-        protected List<ExecutionWorker> _ExecutionWorkers = new List<ExecutionWorker>();
+        protected List<IExecutionWorker> _ExecutionWorkers = new List<IExecutionWorker>();
         #endregion
 
         #region constructors
