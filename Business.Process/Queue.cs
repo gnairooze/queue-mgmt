@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using QueueMgmt.Business.View.Request;
+using QueueMgmt.Business.Exec.Generic;
 
 namespace QueueMgmt.Business.Process
 {
@@ -12,17 +13,20 @@ namespace QueueMgmt.Business.Process
     {
         #region attributes
         protected List<Business.View.OperationSettings.ListView> _OperationsSettings;
+
         protected List<Data.Model.Request> _DataModelRequests;
 
-        static Data.Model.QueueDbContext db = new Data.Model.QueueDbContext();
-        static Execution exec = null;
+        static Data.Model.QueueDbContext _db = new Data.Model.QueueDbContext();
+        static Execution _exec = null;
         #endregion
 
         #region constructors
-        public Queue(int queueID, int topCount, ILogger.ILog logger)
+        public Queue(int queueID, int topCount, ILogger.ILog logger, Vault.ExecType executionType)
         {
             this.Logger = logger;
-            Queue.exec = new Execution(this.Logger);
+
+            ExecFactory execfactory = new ExecFactory(this.Logger, Queue._db);
+            Queue._exec = execfactory.GetExecution(executionType);
 
             loadOperationsSettings();
 
@@ -56,7 +60,7 @@ namespace QueueMgmt.Business.Process
                 requestCounter++;
                 logInfo(string.Format("start executing {0} of {1} requests with ID {2}", requestCounter, requestCount, request.ID));
 
-                bool succeeded = exec.Execute(request);
+                bool succeeded = _exec.Execute(request);
 
                 logInfo(string.Format("end executing {0} of {1} requests", requestCounter, requestCount));
 
@@ -72,7 +76,7 @@ namespace QueueMgmt.Business.Process
 
         private bool updateRequestStatus(ListView request, bool succeeded)
         {
-            logInfo(string.Format("start updateRequestStatus of request with ID {0} to be {1}", request.ID, succeeded?"succeeded":"failed"));
+            logInfo(string.Format("start updateRequestStatus of request with ID {0} to be {1}", request.ID, succeeded ? "succeeded" : "failed"));
 
             Business.View.OperationSettings.ListView operationSettings = this._OperationsSettings.Single(o => o.Operation == request.Operation);
 
@@ -84,7 +88,7 @@ namespace QueueMgmt.Business.Process
             }
             else
             {
-                if(request.RemainingRetrials <= 0)
+                if (request.RemainingRetrials <= 0)
                 {
                     request.Status = View.BusinessVault.RequestStatus.Failed;
                     request.NextRetryOn = null;
@@ -99,9 +103,9 @@ namespace QueueMgmt.Business.Process
                 }
             }
 
-            Data.Model.Request dataModel = Queue.db.Request.Single(r => r.ID == request.ID);
+            Data.Model.Request dataModel = Queue._db.Request.Single(r => r.ID == request.ID);
 
-            if(dataModel.ModifiedOn != request.ModifiedOn)
+            if (dataModel.ModifiedOn != request.ModifiedOn)
             {
                 logInfo(string.Format("the request with ID {0} failed to be updated because it was modified during the processing. started processing with modified on {1} and now modified on is {2}", request.ID, request.ModifiedOn, dataModel.ModifiedOn));
 
@@ -115,14 +119,14 @@ namespace QueueMgmt.Business.Process
 
             dataModel.ModifiedOn = DateTime.Now;
 
-            Queue.db.SaveChanges();
+            Queue._db.SaveChanges();
 
             logInfo(string.Format("request with ID {0} updated in DB", request.ID));
 
             logInfo("end updateRequestStatus of request");
 
             return true;
-            
+
         }
 
         private void loadRequests()
@@ -130,20 +134,20 @@ namespace QueueMgmt.Business.Process
             logInfo("start loadRequests");
 
             DateTime runDate = DateTime.Now;
-            this._DataModelRequests = (from dataModel in Queue.db.Request
-                        where dataModel.QueueID == this.QueueID
-                        && 
-                        (
-                            dataModel.Status == (byte)Business.View.BusinessVault.RequestStatus.NotProcessed 
-                            || 
-                            (
-                                dataModel.Status == (byte)Business.View.BusinessVault.RequestStatus.Retrying
-                                &&
-                                dataModel.NextRetryOn <= runDate
-                            )
-                         )
-                        orderby dataModel.ID
-                        select dataModel).Take(this.TopCount).ToList();
+            this._DataModelRequests = (from dataModel in Queue._db.Request
+                                       where dataModel.QueueID == this.QueueID
+                                       &&
+                                       (
+                                           dataModel.Status == (byte)Business.View.BusinessVault.RequestStatus.NotProcessed
+                                           ||
+                                           (
+                                               dataModel.Status == (byte)Business.View.BusinessVault.RequestStatus.Retrying
+                                               &&
+                                               dataModel.NextRetryOn <= runDate
+                                           )
+                                        )
+                                       orderby dataModel.ID
+                                       select dataModel).Take(this.TopCount).ToList();
 
             logInfo("load requests from DB to _DataModelRequests");
 
@@ -154,7 +158,7 @@ namespace QueueMgmt.Business.Process
         {
             logInfo("start loadOperationsSettings");
 
-            var query = from dataModel in Queue.db.OperationSettings
+            var query = from dataModel in Queue._db.OperationSettings
                         select dataModel;
 
             _OperationsSettings = new List<View.OperationSettings.ListView>();

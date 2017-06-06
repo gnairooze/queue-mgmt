@@ -1,29 +1,31 @@
-﻿using System;
+﻿using ILogger;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using QueueMgmt.Business.View.Request;
 
-namespace QueueMgmt.Business.Process
+namespace QueueMgmt.Business.Exec.Generic
 {
-    internal class Execution
+    public class Execution
     {
         #region attributes
         protected List<IExecutionWorker> _ExecutionWorkers = new List<IExecutionWorker>();
         #endregion
 
         #region constructors
-        public Execution(ILogger.ILog logger)
+        public Execution(ILog logger, Data.Model.QueueDbContext db)
         {
             this.Logger = logger;
+            this.DB = db;
 
             loadExecutionWorkers();
         }
         #endregion
 
         #region properties
-        public ILogger.ILog Logger { private get; set; }
+        public ILogger.ILog Logger { protected get; set; }
+        public Data.Model.QueueDbContext DB { protected get; set; }
         #endregion
 
         public bool Execute(Business.View.Request.ListView request)
@@ -31,12 +33,12 @@ namespace QueueMgmt.Business.Process
             logInfo(string.Format("start Execute of request with ID {0}", request.ID));
 
             var worker = (from workerItem in this._ExecutionWorkers
-                          where workerItem.BusinessID == request.Worker_BusinessID
+                          where workerItem.ViewModel.BusinessID == request.Worker_BusinessID
                           select workerItem).Single();
 
             bool succeeded = worker.Execute(request);
 
-            logInfo(string.Format("end Execute of request with ID {0} with status {1}", request.ID, succeeded?"succeeded":"failed"));
+            logInfo(string.Format("end Execute of request with ID {0} with status {1}", request.ID, succeeded ? "succeeded" : "failed"));
 
             return succeeded;
         }
@@ -44,7 +46,7 @@ namespace QueueMgmt.Business.Process
         /// <summary>
         /// Load execution workers. We can have many types doing many businesses.
         /// </summary>
-        protected void loadExecutionWorkers()
+        protected virtual void loadExecutionWorkers()
         {
             logInfo("start loadExecutionWorkers");
 
@@ -53,7 +55,7 @@ namespace QueueMgmt.Business.Process
             logInfo("end loadExecutionWorkers");
         }
 
-        private void logInfo(string what)
+        protected void logInfo(string what)
         {
             this.Logger.Log(ILogger.Priority.Info, this.GetType().ToString(), what, DateTime.Now);
         }

@@ -3,32 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using QueueMgmt.Business.View.Request;
 
-namespace QueueMgmt.Business.Process
+namespace QueueMgmt.Business.Exec.Generic
 {
     internal class TestExecutionWorker : IExecutionWorker
     {
 
         #region properties
-        public Guid BusinessID { get; set; }
-        public long ID { get; set; }
-        public string Name { get; set; }
-        public string URL { get; set; }
-        public string Headers { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public DateTime ModeifiedOn { get; set; }
+        public View.Worker.ListView ViewModel { get; set; }
         #endregion
 
         #region consturctors
         public TestExecutionWorker()
         {
-            this.ID = 1;
-            this.BusinessID = Guid.Parse("A92DF39B-EEC6-4967-989C-9C3177BE1231");
+            this.ViewModel = new View.Worker.ListView()
+            {
+                BusinessID = Guid.Parse("A92DF39B-EEC6-4967-989C-9C3177BE1231"),
+                ID = 1
+            };
         }
         #endregion
 
-        public bool Execute(ListView request)
+        public bool Execute(Business.View.Request.ListView request)
         {
             if (request.ID % 13 != 0)
             {

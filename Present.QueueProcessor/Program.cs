@@ -10,7 +10,10 @@ namespace QueueMgmt.Present.QueueProcessor
     {
         static void Main(string[] args)
         {
-            Business.Process.Queue queue = new Business.Process.Queue(QueueProcessor.Properties.Settings.Default.QueueID, QueueProcessor.Properties.Settings.Default.TopCount, new ConsoleLogger.SimpleLogger());
+            Business.Process.Queue queue = new Business.Process.Queue(QueueProcessor.Properties.Settings.Default.QueueID,
+               QueueProcessor.Properties.Settings.Default.TopCount,
+               new ConsoleLogger.SimpleLogger(),
+               Business.Process.Vault.ExecType.ApiWorker);
 
             queue.Run();
 
