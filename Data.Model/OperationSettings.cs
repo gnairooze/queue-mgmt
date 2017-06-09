@@ -13,8 +13,13 @@ namespace QueueMgmt.Data.Model
         #region properties
         [Required]
         [MaxLength(20)]
-        [Index(IsUnique = true)]
+        [Index("Operation_Worker_ID", IsUnique = true, Order = 1)]
         public string Operation { get; set; }
+        [Required]
+        [Index("Operation_Worker_ID", IsUnique = true, Order = 2)]
+        public long Worker_ID { get; set; }
+        [Required]
+        public Guid Worker_BusinessID { get; set; }
         [Required]
         public int MaxRetrialCount { get; set; }
         /// <summary>

@@ -14,5 +14,9 @@ namespace QueueMgmt.Business.Exec.Generic
         #endregion
 
         bool Execute(Business.View.Request.ListView request);
+
+        event EventHandler<ExecutionCompletedEventArgs> ExecutionCompleted;
+
+        void OnExecutionCompletion(ExecutionCompletedEventArgs e);
     }
 }

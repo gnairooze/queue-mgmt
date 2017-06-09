@@ -10,8 +10,7 @@ namespace QueueMgmt.Business.Process
     {
         public enum ExecType
         {
-            Generic,
-            ApiWorker
+            Generic
         }
     }
 }

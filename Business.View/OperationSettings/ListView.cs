@@ -28,6 +28,8 @@ namespace QueueMgmt.Business.View.OperationSettings
             this.ModifiedOn = operationSettings.ModifiedOn;
             this.Operation = operationSettings.Operation;
             this.RetrialDelay = operationSettings.RetrialDelay;
+            this.Worker_BusinessID = operationSettings.Worker_BusinessID;
+            this.Worker_ID = operationSettings.Worker_ID;
         }
         #endregion
 
@@ -35,6 +37,8 @@ namespace QueueMgmt.Business.View.OperationSettings
         public long ID { get; set; }
         public Guid BusinessID { get; set; }
         public string Operation { get; set; }
+        public long Worker_ID { get; set; }
+        public Guid Worker_BusinessID { get; set; }
         public int MaxRetrialCount { get; set; }
         /// <summary>
         /// retrial delay in seconds

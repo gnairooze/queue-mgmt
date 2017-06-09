@@ -13,7 +13,7 @@ namespace QueueMgmt.Present.QueueProcessor
             Business.Process.Queue queue = new Business.Process.Queue(QueueProcessor.Properties.Settings.Default.QueueID,
                QueueProcessor.Properties.Settings.Default.TopCount,
                new ConsoleLogger.SimpleLogger(),
-               Business.Process.Vault.ExecType.ApiWorker);
+               Business.Process.Vault.ExecType.Generic);
 
             queue.Run();
 

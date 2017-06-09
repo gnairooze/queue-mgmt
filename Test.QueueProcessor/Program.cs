@@ -10,7 +10,7 @@ namespace QueueMgmt.Test.QueueProcessor
     {
         static void Main(string[] args)
         {
-            //TestData.Fill();
+            TestData.Fill();
 
             //TestData.ResetRequests();
 

@@ -27,6 +27,7 @@ namespace QueueMgmt.Business.View.Request
             this.ModifiedOn = request.ModifiedOn;
             this.NextRetryOn = request.NextRetryOn;
             this.Operation = request.Operation;
+            this.OperationSettings_ID = request.OperationSettings_ID;
             this.QueueID = request.QueueID;
             this.ReferenceName = request.ReferenceName;
             this.ReferenceValue = request.ReferenceValue;
@@ -40,6 +41,7 @@ namespace QueueMgmt.Business.View.Request
         #region properties
         public long ID { get; set; }
         public Guid BusinessID { get; set; }
+        public long OperationSettings_ID { get; set; }
         public string Operation { get; set; }
         public string ReferenceName { get; set; }
         public string ReferenceValue { get; set; }
@@ -76,6 +78,7 @@ namespace QueueMgmt.Business.View.Request
             request.Data = this.Data;
             request.NextRetryOn = this.NextRetryOn;
             request.Operation = this.Operation;
+            request.OperationSettings_ID = this.OperationSettings_ID;
             request.QueueID = this.QueueID;
             request.ReferenceName = this.ReferenceName;
             request.ReferenceValue = this.ReferenceValue;

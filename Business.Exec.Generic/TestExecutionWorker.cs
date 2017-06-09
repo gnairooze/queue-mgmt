@@ -22,17 +22,37 @@ namespace QueueMgmt.Business.Exec.Generic
                 ID = 1
             };
         }
+
+        public event EventHandler<ExecutionCompletedEventArgs> ExecutionCompleted;
+
         #endregion
 
         public bool Execute(Business.View.Request.ListView request)
         {
+            bool result = false;
+
             if (request.ID % 13 != 0)
             {
-                return true;
+                result = true;
             }
-            else
+
+            //trigger the event
+            OnExecutionCompletion(new ExecutionCompletedEventArgs()
             {
-                return false;
+                Request = request,
+                Worker = this,
+                Succeeded = result
+            });
+
+            return result;
+        }
+
+        public void OnExecutionCompletion(ExecutionCompletedEventArgs e)
+        {
+            EventHandler<ExecutionCompletedEventArgs> handler = ExecutionCompleted;
+            if (handler != null)
+            {
+                handler(this, e);
             }
         }
     }
